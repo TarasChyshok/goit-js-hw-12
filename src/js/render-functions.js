@@ -64,4 +64,8 @@ export function hideLoader() {
     span.classList.remove('showLoader');
   }
 }
+
+export function showLoadMoreButton() {}
+
+export function hideLoadMoreButton() {}
 //splghtbx

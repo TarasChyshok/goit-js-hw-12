@@ -17,10 +17,7 @@ form.addEventListener('submit', e => {
     return;
   } else if (inputElem.value !== false) {
     showLoader();
-    getImagesByQuery(
-      inputElem.value.toLowerCase().trim()
-      //if don't error
-    )
+    getImagesByQuery(inputElem.value.trim().toLowerCase())
       .then(hits => {
         if (hits.length === 0) {
           iziToast.error({
@@ -47,3 +44,5 @@ form.addEventListener('submit', e => {
       });
   }
 });
+
+console.log(getImagesByQuery(inputElem.value.trim().toLowerCase()));
