@@ -2,6 +2,8 @@
 import SimpleLightbox from 'simplelightbox';
 // Додатковий імпорт стилів
 import 'simplelightbox/dist/simple-lightbox.min.css';
+import { pageQuantity } from './pixabay-api';
+export const buttonLoadMore = document.querySelector('loadMoreButton');
 
 export const lightbox = new SimpleLightbox('ul.gallery a.a-item', {
   nav: true,
@@ -17,8 +19,6 @@ export const lightbox = new SimpleLightbox('ul.gallery a.a-item', {
 const galleryUl = document.querySelector('ul.gallery');
 
 export function createGallery(images) {
-  //problem
-  //ul-(for-li-img)-insertAdj(ul)
   const galleryMarkup = images.map(element => {
     return `<li class="item-gallery">
                 <a href="${element.largeImageURL}" class="a-item">
@@ -36,9 +36,13 @@ export function createGallery(images) {
               </li>`;
   });
 
-  galleryUl.insertAdjacentHTML('afterbegin', galleryMarkup.join(''));
-  //simplelightb =new spml('a.gal', {})  simpleLightb.refresh();
+  galleryUl.insertAdjacentHTML('beforeend', galleryMarkup.join(''));
   lightbox.refresh();
+  if (pageQuantity > 1) {
+    const elem = galleryUl.children[(x / 15 - 1) * 15 + 1]; //обчислюємо перший нововкладений елемент після створення галереї
+    const topPix = elem.getBoundingClientRect().top;
+    window.scrollBy(topPix);
+  }
 }
 export function clearGallery() {
   if (galleryUl) {
@@ -60,12 +64,29 @@ export function showLoader() {
 export function hideLoader() {
   // document.querySelector('form').insertAdjacentHTML('afterend', '');
   const span = document.querySelector('span.loader');
-  if (span && span.classList.contains('showLoader')) {
+  if (span != false && span.classList.contains('showLoader')) {
     span.classList.remove('showLoader');
   }
 }
 
-export function showLoadMoreButton() {}
+export function showLoadMoreButton() {
+  const buttonLoadMore = document.querySelector('loadMoreButton');
+  if (
+    buttonLoadMore != false &&
+    !buttonLoadMore.classList.contains('showLoadMoreButton')
+  ) {
+    buttonLoadMore.classList.add('showLoadMoreButton');
+    //додати клас на лоадмор
+  }
+}
 
-export function hideLoadMoreButton() {}
+export function hideLoadMoreButton() {
+  const buttonLoadMore = document.querySelector('loadMoreButton');
+  if (
+    buttonLoadMore != false &&
+    buttonLoadMore.classList.contains('showLoadMoreButton')
+  ) {
+    buttonLoadMore.classList.remove('showLoadMoreButton');
+  }
+}
 //splghtbx

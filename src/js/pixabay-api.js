@@ -1,7 +1,9 @@
 import axios from 'axios';
+import { hideLoadMoreButton } from './render-functions';
+export let pageQuantity = 1;
+export let totalHits = null;
 export async function getImagesByQuery(query, page) {
-  //api key: 53619914-87b740f2b3a0dec47a2b3fec9
-  // if (query) {
+  // hideLoadMoreButton();
   const response = await axios({
     method: 'get',
     url: 'https://pixabay.com/api/',
@@ -12,13 +14,14 @@ export async function getImagesByQuery(query, page) {
       orientation: 'horizontal',
       safesearch: true,
       lang: 'ua',
-      // page: '',
-      per_page: 9,
+      page: pageQuantity,
+      per_page: 15,
     },
   });
-  //   .then(response => {
-  //   return response.data.hits;
-  // });
-
+  totalHits = response.data.totalHits;
   return response.data.hits;
+}
+
+export function changePageQuantity(newValue) {
+  pageQuantity = newValue;
 }
