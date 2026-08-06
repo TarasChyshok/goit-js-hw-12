@@ -3,7 +3,7 @@ import SimpleLightbox from 'simplelightbox';
 // Додатковий імпорт стилів
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import { pageQuantity } from './pixabay-api';
-export const buttonLoadMore = document.querySelector('loadMoreButton');
+export const buttonLoadMore = document.querySelector('.loadMoreButton');
 
 export const lightbox = new SimpleLightbox('ul.gallery a.a-item', {
   nav: true,
@@ -70,7 +70,7 @@ export function hideLoader() {
 }
 
 export function showLoadMoreButton() {
-  const buttonLoadMore = document.querySelector('loadMoreButton');
+  const buttonLoadMore = document.querySelector('.loadMoreButton');
   if (
     buttonLoadMore != false &&
     !buttonLoadMore.classList.contains('showLoadMoreButton')
@@ -81,7 +81,7 @@ export function showLoadMoreButton() {
 }
 
 export function hideLoadMoreButton() {
-  const buttonLoadMore = document.querySelector('loadMoreButton');
+  const buttonLoadMore = document.querySelector('.loadMoreButton');
   if (
     buttonLoadMore != false &&
     buttonLoadMore.classList.contains('showLoadMoreButton')

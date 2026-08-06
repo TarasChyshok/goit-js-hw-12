@@ -13,11 +13,11 @@ import {
   hideLoadMoreButton,
   showLoader,
   showLoadMoreButton,
-  buttonLoadMore,
 } from './js/render-functions';
 
 const inputElem = document.querySelector('input[name="search-text"]');
 const form = document.querySelector('form');
+const buttonLoadMore = document.querySelector('.loadMoreButton');
 
 form.addEventListener('submit', e => {
   e.preventDefault();
@@ -58,22 +58,23 @@ form.addEventListener('submit', e => {
   }
 });
 
-// buttonLoadMore.addEventListener('click', () => {
-// hideLoadMoreButton();
-//   changePageQuantity(pageQuantity + 1);
-//   getImagesByQuery(inputElem.value.trim().toLowerCase());
-//   // pageQuantity++;
-//    createGallery();
-//    showLoadMoreButton();
-// });
+console.log(buttonLoadMore);
+buttonLoadMore.addEventListener('click', () => {
+  hideLoadMoreButton();
+  changePageQuantity(pageQuantity + 1);
+  getImagesByQuery(inputElem.value.trim().toLowerCase());
+  // pageQuantity++;
+  createGallery();
+  showLoadMoreButton();
+});
 
-// totalHits.addEventListener('change', () => {
-//   if (pageQuantity > totalHits / 15) {
-//     hideLoadMoreButton();
-//     return iziToast.info({
-//       message: `We're sorry, but you've reached the end of search results.`,
-//       position: 'topRight',
-//       backgroundColor: ' #ef4040;',
-//     });
-//   }
-// });
+totalHits.addEventListener('change', () => {
+  if (pageQuantity > totalHits / 15) {
+    hideLoadMoreButton();
+    return iziToast.info({
+      message: `We're sorry, but you've reached the end of search results.`,
+      position: 'topRight',
+      backgroundColor: ' #ef4040;',
+    });
+  }
+});
