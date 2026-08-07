@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { hideLoadMoreButton } from './render-functions';
-export let pageQuantity = 1;
-export let totalHits = null;
+export let pageQuantity = 0;
+export let totalHitsVariable = null;
 export async function getImagesByQuery(query, page) {
   // hideLoadMoreButton();
   const response = await axios({
@@ -18,6 +18,7 @@ export async function getImagesByQuery(query, page) {
       per_page: 15,
     },
   });
+  totalHitsVariable = response.data.totalHits;
   return response.data;
 }
 

@@ -4,7 +4,7 @@ import {
   changePageQuantity,
   getImagesByQuery,
   pageQuantity,
-  totalHits,
+  totalHitsVariable,
 } from './js/pixabay-api';
 import {
   clearGallery,
@@ -18,7 +18,7 @@ import {
 export const inputElem = document.querySelector('input[name="search-text"]');
 const form = document.querySelector('form');
 const buttonLoadMore = document.querySelector('.loadMoreButton');
-// let hits = null;
+let infoV = null;
 
 form.addEventListener('submit', e => {
   e.preventDefault();
@@ -33,13 +33,21 @@ form.addEventListener('submit', e => {
     hideLoadMoreButton();
     getImagesByQuery(inputElem.value.trim().toLowerCase())
       .then(info => {
+        infoV = info;
         try {
           if (info.hits.length === 0) {
-            iziToast.error({
+            return iziToast.error({
               message:
                 'Sorry, there are no images matching your search query. Please try again!',
               position: 'topRight',
               backgroundColor: ' #ef4040;',
+            });
+          } else if (pageQuantity > Math.round(infoV.totalHitsVariable / 15)) {
+            hideLoadMoreButton();
+            iziToast.info({
+              message: `We're sorry, but you've reached the end of search results.`,
+              position: 'topRight',
+              backgroundColor: '#6c8cff;',
             });
           } else {
             showLoadMoreButton();
@@ -60,24 +68,21 @@ form.addEventListener('submit', e => {
 });
 
 buttonLoadMore.addEventListener('click', () => {
-  hideLoadMoreButton();
-  changePageQuantity(pageQuantity + 1);
-  getImagesByQuery(inputElem.value.trim().toLowerCase())
-    .then(info => {
+  if (pageQuantity > Math.round(infoV.totalHitsVariable / 15)) {
+    hideLoadMoreButton();
+    iziToast.info({
+      message: `We're sorry, but you've reached the end of search results.`,
+      position: 'topRight',
+      backgroundColor: '#6c8cff;',
+    });
+  } else {
+    hideLoadMoreButton();
+    changePageQuantity(pageQuantity + 1);
+    getImagesByQuery(inputElem.value.trim().toLowerCase()).then(info => {
       createGallery(info.hits);
       showLoadMoreButton();
-      return info;
-    })
-    .then(info => {
-      if (pageQuantity > Math.round(info.totalHits / 15)) {
-        hideLoadMoreButton();
-        iziToast.info({
-          message: `We're sorry, but you've reached the end of search results.`,
-          position: 'topRight',
-          backgroundColor: 'к#6c8cff;',
-        });
-      }
     });
+  }
 });
 
 inputElem.addEventListener('input', () => {
