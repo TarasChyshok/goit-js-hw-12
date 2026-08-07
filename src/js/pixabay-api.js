@@ -18,8 +18,7 @@ export async function getImagesByQuery(query, page) {
       per_page: 15,
     },
   });
-  totalHits = response.data.totalHits;
-  return response.data.hits;
+  return response.data;
 }
 
 export function changePageQuantity(newValue) {

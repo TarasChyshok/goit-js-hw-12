@@ -39,9 +39,10 @@ export function createGallery(images) {
   galleryUl.insertAdjacentHTML('beforeend', galleryMarkup.join(''));
   lightbox.refresh();
   if (pageQuantity > 1) {
-    const elem = galleryUl.children[(x / 15 - 1) * 15 + 1]; //обчислюємо перший нововкладений елемент після створення галереї
+    const elem =
+      galleryUl.children[(galleryUl.children.length / 15 - 1) * 15 + 1]; //обчислюємо перший нововкладений елемент після створення галереї
     const topPix = elem.getBoundingClientRect().top;
-    window.scrollBy(topPix);
+    window.scrollBy({ top: topPix, behavior: 'smooth' });
   }
 }
 export function clearGallery() {

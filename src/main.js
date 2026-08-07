@@ -15,9 +15,10 @@ import {
   showLoadMoreButton,
 } from './js/render-functions';
 
-const inputElem = document.querySelector('input[name="search-text"]');
+export const inputElem = document.querySelector('input[name="search-text"]');
 const form = document.querySelector('form');
 const buttonLoadMore = document.querySelector('.loadMoreButton');
+// let hits = null;
 
 form.addEventListener('submit', e => {
   e.preventDefault();
@@ -29,10 +30,11 @@ form.addEventListener('submit', e => {
     return;
   } else if (inputElem.value !== false) {
     showLoader();
+    hideLoadMoreButton();
     getImagesByQuery(inputElem.value.trim().toLowerCase())
-      .then(hits => {
+      .then(info => {
         try {
-          if (hits.length === 0) {
+          if (info.hits.length === 0) {
             iziToast.error({
               message:
                 'Sorry, there are no images matching your search query. Please try again!',
@@ -41,10 +43,9 @@ form.addEventListener('submit', e => {
             });
           } else {
             showLoadMoreButton();
-            createGallery(hits);
+            createGallery(info.hits);
           }
         } catch (error) {
-          console.log(error);
           return iziToast.error({
             message: `Sorry, here ${error}!`,
             position: 'topRight',
@@ -58,23 +59,27 @@ form.addEventListener('submit', e => {
   }
 });
 
-console.log(buttonLoadMore);
 buttonLoadMore.addEventListener('click', () => {
   hideLoadMoreButton();
   changePageQuantity(pageQuantity + 1);
-  getImagesByQuery(inputElem.value.trim().toLowerCase());
-  // pageQuantity++;
-  createGallery();
-  showLoadMoreButton();
+  getImagesByQuery(inputElem.value.trim().toLowerCase())
+    .then(info => {
+      createGallery(info.hits);
+      showLoadMoreButton();
+      return info;
+    })
+    .then(info => {
+      if (pageQuantity > Math.round(info.totalHits / 15)) {
+        hideLoadMoreButton();
+        iziToast.info({
+          message: `We're sorry, but you've reached the end of search results.`,
+          position: 'topRight',
+          backgroundColor: 'к#6c8cff;',
+        });
+      }
+    });
 });
 
-totalHits.addEventListener('change', () => {
-  if (pageQuantity > totalHits / 15) {
-    hideLoadMoreButton();
-    return iziToast.info({
-      message: `We're sorry, but you've reached the end of search results.`,
-      position: 'topRight',
-      backgroundColor: ' #ef4040;',
-    });
-  }
+inputElem.addEventListener('input', () => {
+  inputElem.style.borderColor = '#4e75ff';
 });

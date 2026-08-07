@@ -55,16 +55,35 @@ form {
 
 button {
   border-radius: 8px;
-  padding: 8px 16px;
-  width: 91px;
-  height: 40px;
   background: #4e75ff;
   color: white;
   border: none;
+  align-items: center;
+  font-weight: 500;
+  font-size: 16px;
+
+  /* line-height: 24px; */
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+
+.submit-button {
+  height: 40px;
+  width: 91px;
 }
 
 button:hover {
   background: #6c8cff;
+}
+
+.loadMoreButton {
+  justify-content: center;
+  width: none;
+  padding: 16px 8px;
+  width: 125px;
+  height: 40px;
+  display: none;
 }
 
 input {
@@ -73,9 +92,14 @@ input {
   border-color: #808080;
   width: 272px;
   height: 40px;
+  padding: 0;
+  border: 1px solid black;
 }
 input:hover {
   border-color: #0000;
+}
+input:active {
+  border: 1px solid #4e75ff;
 }
 input::placeholder {
   padding: 16px;
@@ -162,10 +186,6 @@ img {
   color: #2e2f42;
 }
 
-.LoadMoreButton {
-  display: none;
-}
-
-.showLoadMoreButton {
-  display: block;
+button.showLoadMoreButton {
+  display: flex;
 }
