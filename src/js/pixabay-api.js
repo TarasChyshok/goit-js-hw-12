@@ -1,8 +1,7 @@
 import axios from 'axios';
-import { hideLoadMoreButton } from './render-functions';
 export let pageQuantity = 0;
-export let totalHitsVariable = null;
-export async function getImagesByQuery(query, page) {
+export let perPageVariable = 15;
+export async function getImagesByQuery(query, pageGiven) {
   // hideLoadMoreButton();
   const response = await axios({
     method: 'get',
@@ -14,12 +13,16 @@ export async function getImagesByQuery(query, page) {
       orientation: 'horizontal',
       safesearch: true,
       lang: 'ua',
-      page: pageQuantity,
-      per_page: 15,
+      page: pageGiven,
+      per_page: perPageVariable,
     },
   });
-  totalHitsVariable = response.data.totalHits;
+  pageQuantity = pageGiven;
   return response.data;
+}
+
+export function changePerPageQuantity(newValue) {
+  perPageVariable = newValue;
 }
 
 export function changePageQuantity(newValue) {

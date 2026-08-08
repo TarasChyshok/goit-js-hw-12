@@ -16,7 +16,7 @@ export const lightbox = new SimpleLightbox('ul.gallery a.a-item', {
   captionSelector: 'img',
   captionDelay: 250,
 });
-const galleryUl = document.querySelector('ul.gallery');
+export const galleryUl = document.querySelector('ul.gallery');
 
 export function createGallery(images) {
   const galleryMarkup = images.map(element => {
@@ -38,12 +38,6 @@ export function createGallery(images) {
 
   galleryUl.insertAdjacentHTML('beforeend', galleryMarkup.join(''));
   lightbox.refresh();
-  if (pageQuantity > 1) {
-    const elem =
-      galleryUl.children[(galleryUl.children.length / 15 - 1) * 15 + 1]; //обчислюємо перший нововкладений елемент після створення галереї
-    const topPix = elem.getBoundingClientRect().top;
-    window.scrollBy({ top: topPix, behavior: 'smooth' });
-  }
 }
 export function clearGallery() {
   if (galleryUl) {
@@ -65,7 +59,7 @@ export function showLoader() {
 export function hideLoader() {
   // document.querySelector('form').insertAdjacentHTML('afterend', '');
   const span = document.querySelector('span.loader');
-  if (span != false && span.classList.contains('showLoader')) {
+  if (span && span.classList.contains('showLoader')) {
     span.classList.remove('showLoader');
   }
 }
@@ -73,7 +67,7 @@ export function hideLoader() {
 export function showLoadMoreButton() {
   const buttonLoadMore = document.querySelector('.loadMoreButton');
   if (
-    buttonLoadMore != false &&
+    buttonLoadMore &&
     !buttonLoadMore.classList.contains('showLoadMoreButton')
   ) {
     buttonLoadMore.classList.add('showLoadMoreButton');
@@ -84,7 +78,7 @@ export function showLoadMoreButton() {
 export function hideLoadMoreButton() {
   const buttonLoadMore = document.querySelector('.loadMoreButton');
   if (
-    buttonLoadMore != false &&
+    buttonLoadMore &&
     buttonLoadMore.classList.contains('showLoadMoreButton')
   ) {
     buttonLoadMore.classList.remove('showLoadMoreButton');
