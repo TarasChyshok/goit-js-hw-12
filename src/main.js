@@ -51,9 +51,17 @@ form.addEventListener('submit', e => {
             position: 'topRight',
             backgroundColor: '#6c8cff;',
           });
-          if (info.totalHits <= perPageVariable) {
-            createGallery(info.hits);
-          }
+        } else if (
+          info.totalHits <= perPageVariable ||
+          (pageQuantity === 1 && info.totalHits <= perPageVariable)
+        ) {
+          hideLoadMoreButton();
+          createGallery(info.hits);
+          iziToast.info({
+            message: `We're sorry, but you've reached the end of search results.`,
+            position: 'topRight',
+            backgroundColor: '#6c8cff;',
+          });
         } else {
           showLoadMoreButton();
           createGallery(info.hits);
@@ -73,24 +81,24 @@ form.addEventListener('submit', e => {
 
 buttonLoadMore.addEventListener('click', () => {
   async function getMoreImgByButton() {
+    // hideLoadMoreButton();
+    //перевірка за останніми результатами попереднього запиту.
+    // changePerPageQuantity(pageQuantity + 1);
     try {
-      // hideLoadMoreButton();
-      //перевірка за останніми результатами попереднього запиту.
       showLoader();
-      // changePerPageQuantity(pageQuantity + 1);
-      if (pageQuantity > Math.ceil(infoV.totalHits / perPageVariable)) {
-        hideLoadMoreButton();
+      hideLoadMoreButton();
+      changePageQuantity(pageQuantity + 1);
+      const info = await getImagesByQuery(
+        inputElem.value.trim().toLowerCase(),
+        pageQuantity
+      );
+      if (pageQuantity > Math.ceil(info.totalHits / perPageVariable)) {
         iziToast.info({
           message: `We're sorry, but you've reached the end of search results.`,
           position: 'topRight',
           backgroundColor: '#6c8cff;',
         });
       } else {
-        const info = await getImagesByQuery(
-          inputElem.value.trim().toLowerCase(),
-          pageQuantity
-        );
-        changePageQuantity(pageQuantity + 1);
         createGallery(info.hits);
         if (pageQuantity > 1) {
           const elemLiImg = document.querySelector('li.item-gallery'); //обчислюємо перший нововкладений елемент після створення галереї на основі кількості елементів що відмальовуються з бекенда.
@@ -107,8 +115,9 @@ buttonLoadMore.addEventListener('click', () => {
         position: 'topRight',
         backgroundColor: ' #ef4040;',
       });
+    } finally {
+      hideLoader();
     }
-    hideLoader();
   }
   getMoreImgByButton();
 });
