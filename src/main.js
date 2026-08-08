@@ -20,6 +20,7 @@ import {
 export const inputElem = document.querySelector('input[name="search-text"]');
 const form = document.querySelector('form');
 const buttonLoadMore = document.querySelector('.loadMoreButton');
+let infoV = null;
 
 form.addEventListener('submit', e => {
   e.preventDefault();
@@ -33,27 +34,28 @@ form.addEventListener('submit', e => {
       showLoader();
       hideLoadMoreButton();
       try {
-        changePageQuantity(1);
         const info = await getImagesByQuery(
           inputElem.value.trim().toLowerCase(),
-          1
+          35
         );
-        if (info.hits.length === 0) {
-          return iziToast.error({
+        infoV = info;
+        if (info.hits.length === 0 && info.totalHits === 0) {
+          iziToast.error({
             message:
               'Sorry, there are no images matching your search query. Please try again!',
             position: 'topRight',
             backgroundColor: ' #ef4040;',
           });
-        } else if (
-          pageQuantity > Math.round(info.totalHits / perPageVariable)
-        ) {
+        } else if (pageQuantity > Math.ceil(info.totalHits / perPageVariable)) {
           hideLoadMoreButton();
           iziToast.info({
             message: `We're sorry, but you've reached the end of search results.`,
             position: 'topRight',
             backgroundColor: '#6c8cff;',
           });
+          if (info.totalHits <= perPageVariable) {
+            createGallery(info.hits);
+          }
         } else {
           showLoadMoreButton();
           createGallery(info.hits);
@@ -74,16 +76,13 @@ form.addEventListener('submit', e => {
 buttonLoadMore.addEventListener('click', () => {
   async function getMoreImgByButton() {
     try {
-      hideLoadMoreButton();
+      // hideLoadMoreButton();
+      //перевірка за останніми результатами попереднього запиту.
       showLoader();
+      hideLoadMoreButton();
       changePageQuantity(pageQuantity + 1);
       // changePerPageQuantity(pageQuantity + 1);
-      const info = await getImagesByQuery(
-        inputElem.value.trim().toLowerCase(),
-        pageQuantity
-      );
-      if (pageQuantity > Math.ceil(info.totalHits / perPageVariable)) {
-        //infoV, totalHitsVariable
+      if (pageQuantity > Math.ceil(infoV.totalHits / perPageVariable)) {
         hideLoadMoreButton();
         iziToast.info({
           message: `We're sorry, but you've reached the end of search results.`,
@@ -91,24 +90,29 @@ buttonLoadMore.addEventListener('click', () => {
           backgroundColor: '#6c8cff;',
         });
       } else {
+        const info = await getImagesByQuery(
+          inputElem.value.trim().toLowerCase(),
+          pageQuantity
+        );
         createGallery(info.hits);
-        hideLoader();
         if (pageQuantity > 1) {
           const elemLiImg = document.querySelector('li.item-gallery'); //обчислюємо перший нововкладений елемент після створення галереї на основі кількості елементів що відмальовуються з бекенда.
-          console.log(elemLiImg.getBoundingClientRect());
           const heightOfElem = elemLiImg.getBoundingClientRect().height;
           let quantityOfPixels = heightOfElem * 2;
           window.scrollBy({ top: quantityOfPixels, behavior: 'smooth' });
+          showLoadMoreButton();
         }
-        showLoadMoreButton();
+        hideLoader();
+        hideLoadMoreButton();
       }
     } catch (error) {
-      return iziToast.error({
+      iziToast.error({
         message: `Sorry, here ${error}!`,
         position: 'topRight',
         backgroundColor: ' #ef4040;',
       });
     }
+    hideLoader();
   }
   getMoreImgByButton();
 });
