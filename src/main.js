@@ -1,7 +1,6 @@
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import {
-  // changePageQuantity,
   getImagesByQuery,
   perPageVariable,
   pageQuantity,
@@ -27,7 +26,6 @@ form.addEventListener('submit', e => {
   async function searchNewRequestImages() {
     clearGallery();
     hideLoader();
-    // pageQuantity = 1;
     if (inputElem.value.trim() == '') {
       return;
     } else if (inputElem.value !== false) {
@@ -36,7 +34,7 @@ form.addEventListener('submit', e => {
       try {
         const info = await getImagesByQuery(
           inputElem.value.trim().toLowerCase(),
-          35
+          changePageQuantity(1)
         );
         infoV = info;
         if (info.hits.length === 0 && info.totalHits === 0) {
@@ -79,8 +77,6 @@ buttonLoadMore.addEventListener('click', () => {
       // hideLoadMoreButton();
       //перевірка за останніми результатами попереднього запиту.
       showLoader();
-      hideLoadMoreButton();
-      changePageQuantity(pageQuantity + 1);
       // changePerPageQuantity(pageQuantity + 1);
       if (pageQuantity > Math.ceil(infoV.totalHits / perPageVariable)) {
         hideLoadMoreButton();
@@ -94,6 +90,7 @@ buttonLoadMore.addEventListener('click', () => {
           inputElem.value.trim().toLowerCase(),
           pageQuantity
         );
+        changePageQuantity(pageQuantity + 1);
         createGallery(info.hits);
         if (pageQuantity > 1) {
           const elemLiImg = document.querySelector('li.item-gallery'); //обчислюємо перший нововкладений елемент після створення галереї на основі кількості елементів що відмальовуються з бекенда.
@@ -103,7 +100,6 @@ buttonLoadMore.addEventListener('click', () => {
           showLoadMoreButton();
         }
         hideLoader();
-        hideLoadMoreButton();
       }
     } catch (error) {
       iziToast.error({
